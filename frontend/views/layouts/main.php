@@ -132,11 +132,7 @@ if (!Yii::$app->user->isGuest) {
             </div>
             <div class="header__account">
                 <a class="header__account-photo">
-                    <img src="<?php if (Yii::$app->controller->id == 'site') {
-                        echo 'img/' . $user->ava;
-                    } else {
-                        echo '/img/' . $user->ava;
-                    } ?>"
+                    <img src="<?= '/img/avatar/ava' . Yii::$app->user->id . '.jpg'; ?>"
                          width="43" height="44"
                          alt="Аватар пользователя">
                 </a>

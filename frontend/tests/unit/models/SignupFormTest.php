@@ -2,7 +2,7 @@
 namespace frontend\tests\unit\models;
 
 use Codeception\Test\Unit;
-use common\_fixtures\UserFixture;
+use common\fixtures\UserFixture;
 use common\models\User;
 use frontend\models\SignupForm;
 use frontend\tests\UnitTester;
@@ -40,8 +40,8 @@ class SignupFormTest extends Unit
         /** @var User $user */
         $user = $this->tester->grabRecord('common\models\User', [
             'username' => 'some_username',
-          'email' => 'some_email@example.com',
-          'status' => User::STATUS_INACTIVE
+            'email' => 'some_email@example.com',
+            'status' => User::STATUS_INACTIVE
         ]);
 
         $this->tester->seeEmailIsSent();

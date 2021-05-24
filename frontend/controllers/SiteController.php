@@ -11,6 +11,7 @@ use frontend\models\VerifyEmailForm;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 
@@ -25,22 +26,28 @@ class SiteController extends Controller
     public function behaviors()
     {
         return [
-          'access' => [
-            'class' => AccessControl::className(),
-            'only' => ['logout', 'signup'],
-            'rules' => [
-              [
-                'actions' => ['signup'],
-                'allow' => true,
-                'roles' => ['?'],
-              ],
-              [
-                'actions' => ['logout'],
-                'allow' => true,
-                'roles' => ['@'],
-              ],
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['logout', 'signup'],
+                'rules' => [
+                    [
+                        'actions' => ['signup'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'actions' => ['logout'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
             ],
-          ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'logout' => ['post'],
+                ],
+            ],
         ];
     }
 
@@ -230,7 +237,7 @@ class SiteController extends Controller
             }
         }
 
-        Yii::$app->session->setFlash('error', 'Sorry, we are unable to verify your account with provided token.');
+        Yii::$app->session->setFlash('error', 'Sorry, we are unable to verify your account1 with provided token.');
         return $this->goHome();
     }
 

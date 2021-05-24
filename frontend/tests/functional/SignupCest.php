@@ -29,11 +29,11 @@ class SignupCest
     public function signupWithWrongEmail(FunctionalTester $I)
     {
         $I->submitForm(
-          $this->formId, [
-            'SignupForm[username]'  => 'tester',
-            'SignupForm[email]'     => 'ttttt',
-            'SignupForm[password]'  => 'tester_password',
-          ]
+            $this->formId, [
+                'SignupForm[username]' => 'tester',
+                'SignupForm[email]' => 'ttttt',
+                'SignupForm[password]' => 'tester_password',
+            ]
         );
         $I->dontSee('Username cannot be blank.', '.help-block');
         $I->dontSee('Password cannot be blank.', '.help-block');
@@ -43,15 +43,15 @@ class SignupCest
     public function signupSuccessfully(FunctionalTester $I)
     {
         $I->submitForm($this->formId, [
-          'SignupForm[username]' => 'tester',
-          'SignupForm[email]' => 'tester.email@example.com',
-          'SignupForm[password]' => 'tester_password',
+            'SignupForm[username]' => 'tester',
+            'SignupForm[email]' => 'tester.email@example.com',
+            'SignupForm[password]' => 'tester_password',
         ]);
 
         $I->seeRecord('common\models\User', [
-          'username' => 'tester',
-          'email' => 'tester.email@example.com',
-          'status' => User::STATUS_INACTIVE
+            'username' => 'tester',
+            'email' => 'tester.email@example.com',
+            'status' => User::STATUS_INACTIVE
         ]);
 
         $I->seeEmailIsSent();

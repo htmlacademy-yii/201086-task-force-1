@@ -3,7 +3,7 @@
 namespace frontend\tests\unit\models;
 
 use Codeception\Test\Unit;
-use common\_fixtures\UserFixture as UserFixture;
+use common\fixtures\UserFixture as UserFixture;
 use common\models\User;
 use frontend\models\PasswordResetRequestForm;
 use frontend\tests\UnitTester;
@@ -45,7 +45,7 @@ class PasswordResetRequestFormTest extends Unit
     public function testSendEmailSuccessfully()
     {
         $userFixture = $this->tester->grabFixture('user', 0);
-        
+
         $model = new PasswordResetRequestForm();
         $model->email = $userFixture['email'];
         $user = User::findOne(['password_reset_token' => $userFixture['password_reset_token']]);

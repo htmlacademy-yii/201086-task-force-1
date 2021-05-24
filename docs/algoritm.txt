@@ -27,3 +27,5 @@
 4   yii migrate/create create_categories_table --fields="title:string(128):notNull:unique,title_en:string(128):notNull"
 5   yii migrate/create create_users_categories_table --fields="user_id:integer:notNull:foreignKey(user),category_id:integer:notNull:foreignKey(categories)"
 yii migrate/create create_profile_table --fields="user_id:integer:notNull:foreignKey(user), first_name:string(128), middle_name:string(128), last_name:string(128), phone_number:string(15),address:string(128)"
+TO_DO: доделать блок настроек
+yii migrate/create create_email_settings_table --fields="user_id:integer:notNull:foreignKey(user),task_id:integer:notNull:foreignKey(task), proposal:tinyInteger:notNull, refuse:tinyInteger:notNull,start_task:tinyInteger:notNull,completion_task:tinyInteger:notNull"

@@ -23,6 +23,7 @@ class LoginForm extends Model
     {
         return [
             [['email', 'password'], 'required'],
+            ['password', 'validatePassword'],
         ];
     }
 

@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use common\models\User;
 use frontend\classes\AvailableActions;
 use frontend\classes\TimeAgo;
@@ -21,7 +22,12 @@ $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Tasks', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 YiiAsset::register($this);
+Carbon::now('Europe/Kiev');
 
+Carbon::setLocale('ru');
+
+//echo Yii::$app->formatter->asRelativeTime('02.03.2021');
+//echo Carbon::create('02.03.2021')->diffForHumans();
 ?>
 <div class="main-container page-container">
     <section class="content-view">
@@ -32,7 +38,7 @@ YiiAsset::register($this);
                         <h1><?= $model->name ?></h1>
                         <span>Размещено в категории
                             <a href="#" class="link-regular"><?= $model->category->title ?></a>
-                            <?= (new TimeAgo($model->created_at))->getDate(); ?> назад</span>
+                            <?= Carbon::create($model->created_at)->diffForHumans(); ?> назад</span>
                     </div>
                     <b class="new-task__price new-task__price--<?= $model->category->title_en ?> content-view-price"><?= $model->budget ?>
                         <b> ₽</b></b>

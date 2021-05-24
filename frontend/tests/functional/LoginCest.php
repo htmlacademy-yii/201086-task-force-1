@@ -2,7 +2,7 @@
 
 namespace frontend\tests\functional;
 
-use common\_fixtures\UserFixture;
+use common\fixtures\UserFixture;
 use frontend\tests\FunctionalTester;
 
 class LoginCest
@@ -17,10 +17,10 @@ class LoginCest
     public function _fixtures()
     {
         return [
-          'user' => [
-            'class' => UserFixture::className(),
-            'dataFile' => codecept_data_dir() . 'login_data.php',
-          ],
+            'user' => [
+                'class' => UserFixture::className(),
+                'dataFile' => codecept_data_dir() . 'login_data.php',
+            ],
         ];
     }
 
@@ -32,8 +32,8 @@ class LoginCest
     protected function formParams($login, $password)
     {
         return [
-          'LoginForm[username]' => $login,
-          'LoginForm[password]' => $password,
+            'LoginForm[username]' => $login,
+            'LoginForm[password]' => $password,
         ];
     }
 
