@@ -59,6 +59,11 @@ class MessagesController extends ActiveController
                 'modelClass' => $this->modelClass,
                 'checkAccess' => [$this, 'checkAccess'],
             ],
+            'view' => [
+                'class' => 'yii\rest\ViewAction',
+                'modelClass' => $this->modelClass,
+                'checkAccess' => [$this, 'checkAccess'],
+            ],
             'create' => [
                 'class' => 'yii\rest\CreateAction',
                 'modelClass' => $this->modelClass,
@@ -74,6 +79,16 @@ class MessagesController extends ActiveController
             return false;
         }
         return ChatMessages::find()->where(['task_id' => $id])->all();
+    }
+
+    public function actionView($id)
+    {
+        $model = ChatMessages::find()->where(['id' => $id])->all();
+        if ($this->checkAccess) {
+            call_user_func($this->checkAccess, $this->id, $model);
+        }
+
+        return $model;
     }
 
 }

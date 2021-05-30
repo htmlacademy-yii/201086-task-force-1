@@ -40,7 +40,7 @@ return [
       'enableStrictParsing' => true,
       'showScriptName' => false,
       'rules' => [
-        ['class' => 'yii\rest\UrlRule', 'controller' => 'messages', 'pluralize' => false]
+        ['class' => 'yii\rest\UrlRule', 'controller' => 'api/messages', 'pluralize' => false]
       ],
     ]
   ]
