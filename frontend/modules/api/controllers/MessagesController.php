@@ -4,13 +4,9 @@
 namespace frontend\modules\api\controllers;
 
 use frontend\models\ChatMessages;
-use Yii;
-use yii\filters\AccessControl;
-use yii\filters\ContentNegotiator;
-use yii\rest\ActiveController;
-use yii\web\Response;
 
-class MessagesController extends ActiveController
+
+class MessagesController extends BaseApiController
 {
     public $modelClass = ChatMessages::class;
 
@@ -24,32 +20,7 @@ class MessagesController extends ActiveController
         return true;
     }
 
-    /**
-     * @return array
-     */
-    public function behaviors()
-    {
-        return [
-            'contentNegotiator' => [
-                'class' => ContentNegotiator::class,
-                'formatParam' => '_format',
-                'formats' => [
-                    'xml' => Response::FORMAT_XML,
-                    'application/json' => Response::FORMAT_JSON,
 
-                ],
-            ],
-            'access' => [
-                'class' => AccessControl::class,
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@']
-                    ]
-                ]
-            ]
-        ];
-    }
 
     public function actions()
     {
@@ -59,11 +30,11 @@ class MessagesController extends ActiveController
                 'modelClass' => $this->modelClass,
                 'checkAccess' => [$this, 'checkAccess'],
             ],
-            'view' => [
-                'class' => 'yii\rest\ViewAction',
-                'modelClass' => $this->modelClass,
-                'checkAccess' => [$this, 'checkAccess'],
-            ],
+//            'view' => [
+//                'class' => 'yii\rest\ViewAction',
+//                'modelClass' => $this->modelClass,
+//                'checkAccess' => [$this, 'checkAccess'],
+//            ],
             'create' => [
                 'class' => 'yii\rest\CreateAction',
                 'modelClass' => $this->modelClass,
@@ -73,20 +44,17 @@ class MessagesController extends ActiveController
         ];
     }
 
-    public function actionIndex()
-    {
-        if (!$id = Yii::$app->request->get('task_id')) {
-            return false;
-        }
-        return ChatMessages::find()->where(['task_id' => $id])->all();
-    }
-
+//    public function actionIndex()
+//    {
+//        if (!$id = Yii::$app->request->get('task_id')) {
+//            return false;
+//        }
+//        return ChatMessages::find()->where(['task_id' => $id])->all();
+//    }
+//
     public function actionView($id)
     {
-        $model = ChatMessages::find()->where(['id' => $id])->all();
-        if ($this->checkAccess) {
-            call_user_func($this->checkAccess, $this->id, $model);
-        }
+        $model = ChatMessages::find()->where(['task_id' => $id])->one();
 
         return $model;
     }

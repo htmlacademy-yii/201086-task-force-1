@@ -1,6 +1,6 @@
 <?php
 
-namespace modules\api\controllers;
+namespace frontend\modules\api\controllers;
 
 use yii\filters\ContentNegotiator;
 use yii\rest\ActiveController;
@@ -28,8 +28,9 @@ class BaseApiController extends ActiveController
                 'class' => ContentNegotiator::class,
                 'formatParam' => '_format',
                 'formats' => [
+                    'xml' => Response::FORMAT_XML,
                     'application/json' => Response::FORMAT_JSON,
-                    'xml' => Response::FORMAT_XML
+
                 ],
             ],
         ];

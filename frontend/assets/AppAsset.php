@@ -19,7 +19,7 @@ class AppAsset extends AssetBundle
   public $js = [
       'js/dropzone.js',
       'https://api-maps.yandex.ru/2.1/?apikey=37dcfea9-daf6-4b98-970f-208966a12141&load=package.full&lang=ru-RU',
-      'js/map.js',
+
       'js/messenger.js',
       'js/task.js'
   ];

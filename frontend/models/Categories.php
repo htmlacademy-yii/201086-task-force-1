@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "category".
@@ -43,5 +44,10 @@ class Categories extends ActiveRecord
             'title' => 'Title',
             'title_en' => 'Title En',
         ];
+    }
+
+    public static function getList()
+    {
+        return ArrayHelper::map(self::find()->all(), 'id', 'title');
     }
 }

@@ -22,7 +22,7 @@ use yii\db\ActiveRecord;
  * @property int $created_at
  * @property int $updated_at
  *
- * @property Messages[] $chatMessages
+ * @property ChatMessages[] $chatMessages
  * @property File[] $files
  * @property Proposal[] $proposals
  * @property Review[] $reviews
@@ -33,12 +33,6 @@ use yii\db\ActiveRecord;
  */
 class Task extends ActiveRecord
 {
-    const STATUS = ['Новое', 'Отменено', 'В работе', 'Выполнено', 'Провалено'];
-
-    public $completion;
-    public $completion_comment;
-    public $locations;
-
     /**
      * {@inheritdoc}
      */
@@ -53,51 +47,15 @@ class Task extends ActiveRecord
     public function rules()
     {
         return [
-          [['name', 'category_id', 'deadline', 'customer_id', 'created_at', 'updated_at'], 'required'],
-          [
-            [
-              'category_id',
-              'location_id',
-              'budget',
-              'customer_id',
-              'executor_id',
-              'created_at',
-              'updated_at',
-              'status'
-            ],
-            'integer'
-          ],
-          [['description', 'locations'], 'string'],
-          [['deadline'], 'safe'],
-          [['name'], 'string', 'max' => 128],
-          [
-            ['category_id'],
-            'exist',
-            'skipOnError' => true,
-            'targetClass' => Categories::class,
-            'targetAttribute' => ['category_id' => 'id']
-          ],
-          [
-            ['customer_id'],
-            'exist',
-            'skipOnError' => true,
-            'targetClass' => User::class,
-            'targetAttribute' => ['customer_id' => 'id']
-          ],
-          [
-            ['executor_id'],
-            'exist',
-            'skipOnError' => true,
-            'targetClass' => User::class,
-            'targetAttribute' => ['executor_id' => 'id']
-          ],
-          [
-            ['location_id'],
-            'exist',
-            'skipOnError' => true,
-            'targetClass' => Locations::class,
-            'targetAttribute' => ['location_id' => 'id']
-          ],
+            [['name', 'category_id', 'location_id', 'deadline', 'customer_id', 'created_at', 'updated_at'], 'required'],
+            [['category_id', 'location_id', 'budget', 'customer_id', 'executor_id', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['description'], 'string'],
+            [['deadline'], 'safe'],
+            [['name'], 'string', 'max' => 128],
+            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categories::className(), 'targetAttribute' => ['category_id' => 'id']],
+            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['customer_id' => 'id']],
+            [['executor_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['executor_id' => 'id']],
+            [['location_id'], 'exist', 'skipOnError' => true, 'targetClass' => Locations::className(), 'targetAttribute' => ['location_id' => 'id']],
         ];
     }
 
@@ -123,13 +81,13 @@ class Task extends ActiveRecord
     }
 
     /**
-     * Gets query for [[Messages]].
+     * Gets query for [[ChatMessages]].
      *
      * @return ActiveQuery
      */
     public function getChatMessages()
     {
-        return $this->hasMany(Messages::className(), ['task_id' => 'id']);
+        return $this->hasMany(ChatMessages::className(), ['task_id' => 'id']);
     }
 
     /**
@@ -199,24 +157,6 @@ class Task extends ActiveRecord
      */
     public function getLocation()
     {
-        return $this->hasOne(Locations::class, ['id' => 'location_id']);
-    }
-
-    public static function create($user, $array, $location_id)
-    {
-
-        $task = new static;
-        $task->name = $array['TaskCreate']['name'];
-        $task->budget = $array['TaskCreate']['budget'];
-        $task->description = $array['TaskCreate']['description'];
-        $task->category_id = $array['TaskCreate']['category_id'];
-        $task->location_id = $location_id;
-        $task->deadline = $array['TaskCreate']['deadline'];
-        $task->customer_id = $user;
-        $task->created_at = time();
-        $task->updated_at = time();
-        $task->status = 0;
-        $task->save();
-        return $task;
+        return $this->hasOne(Locations::className(), ['id' => 'location_id']);
     }
 }

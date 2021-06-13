@@ -6,10 +6,11 @@ use yii\helpers\Url;
 Carbon::setLocale('ru');
 ?>
 <div class="new-task__card">
-	<div class="new-task__title">
-		<a href="<?=Url::to(['task/view', 'id' => $model->id]);?>" class="link-regular"><h2><?=$model->name;?></h2></a>
-		<a  class="new-task__type link-regular" href="#">
-            <p><?=$model->category->title?></p>
+    <div class="new-task__title">
+        <a href="<?= Url::to(['task/view', 'id' => $model->id]); ?>" class="link-regular"><h2><?= $model->name; ?></h2>
+        </a>
+        <a class="new-task__type link-regular" href="#">
+            <p><?= $model->category->title ?></p>
         </a>
     </div>
     <div class="new-task__icon new-task__icon--<?= $model->category->title_en ?>"></div>

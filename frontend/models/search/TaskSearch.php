@@ -1,12 +1,13 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\models\search;
 
+use frontend\models\Task;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
 /**
- * TaskSearch represents the model behind the search form of `frontend\models\AvailableActions`.
+ * TaskSearch represents the model behind the search form of `frontend\models\Task`.
  */
 class TaskSearch extends Task
 {
@@ -16,8 +17,8 @@ class TaskSearch extends Task
     public function rules()
     {
         return [
-            [['id', 'category_id', 'location_id', 'budget', 'customer_id', 'executor_id', 'created_at', 'updated_at'], 'integer'],
-            [['name', 'description', 'deadline', 'status'], 'safe'],
+            [['id', 'location_id', 'budget', 'customer_id', 'executor_id', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['name', 'category_id', 'description', 'deadline'], 'safe'],
         ];
     }
 
@@ -39,19 +40,12 @@ class TaskSearch extends Task
      */
     public function search($params)
     {
-        $query = Task::find()
-          ->joinWith('category')
-          ->joinWith('location')
-          ->andWhere(['status'=>0]);
+        $query = Task::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
-          'query' => $query,
-          'Pagination' => [
-            'pageSize' =>5,
-
-          ],
+            'query' => $query,
         ]);
 
         $this->load($params);
@@ -65,20 +59,19 @@ class TaskSearch extends Task
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'category_id' => $this->category_id,
+//            'category_id' => (int)$this->category_id,
             'location_id' => $this->location_id,
             'budget' => $this->budget,
             'deadline' => $this->deadline,
             'customer_id' => $this->customer_id,
             'executor_id' => $this->executor_id,
+            'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'description', $this->description])
-            ->andFilterWhere(['like', 'status', $this->status]);
-
+            ->andFilterWhere(['like', 'category_id', $this->category_id]);
         return $dataProvider;
     }
 }
