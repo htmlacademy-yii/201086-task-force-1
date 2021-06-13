@@ -54,7 +54,10 @@ class MessagesController extends BaseApiController
 //
     public function actionView($id)
     {
-        $model = ChatMessages::find()->where(['task_id' => $id])->one();
+        //TODO реализовать флаг is_mine для /messenger.js:3456
+        $model = ChatMessages::find()->where(['task_id' => $id])->all();
+
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
         return $model;
     }
