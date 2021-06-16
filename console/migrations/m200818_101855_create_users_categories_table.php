@@ -25,6 +25,7 @@ class m200818_101855_create_users_categories_table extends Migration
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->notNull(),
             'category_id' => $this->integer()->notNull(),
+            'status' => $this->integer(2)->defaultValue(0)
         ], $tableOptions);
 
         // creates index for column `user_id`

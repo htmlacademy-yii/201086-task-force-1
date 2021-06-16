@@ -64,6 +64,7 @@ class UsersCategories extends ActiveRecord
             'id' => 'ID',
             'user_id' => 'User ID',
             'category_id' => 'Categories ID',
+            'status' => 'status',
         ];
     }
 

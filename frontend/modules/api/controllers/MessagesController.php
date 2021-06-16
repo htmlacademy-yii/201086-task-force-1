@@ -4,22 +4,13 @@
 namespace frontend\modules\api\controllers;
 
 use frontend\models\ChatMessages;
+use Yii;
+use yii\web\Response;
 
 
 class MessagesController extends BaseApiController
 {
     public $modelClass = ChatMessages::class;
-
-    public $serializer = [
-        'class' => 'yii\rest\Serializer',
-        'collectionEnvelope' => 'items',
-    ];
-
-    public function checkAccess($action, $model = null, $params = [])
-    {
-        return true;
-    }
-
 
 
     public function actions()
@@ -54,9 +45,11 @@ class MessagesController extends BaseApiController
 //
     public function actionView($id)
     {
-        $model = ChatMessages::find()->where(['task_id' => $id])->one();
+        //TODO реализовать флаг is_mine для /messenger.js:3456
+        $model = ChatMessages::find()->where(['task_id' => $id])->all();
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
 
         return $model;
     }
-
 }

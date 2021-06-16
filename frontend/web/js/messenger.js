@@ -3454,8 +3454,8 @@ Vue.component('chat', {
     template: `<div><h3>Переписка</h3>
              <div class="chat__overflow">
                <div class="chat__message" v-for="item in messages" :class="{'chat__message--out': item.is_mine}">
-                <p class="chat__message-time">{{ item.published_at }}</p>
-                <p class="chat__message-text">{{ item.message }}</p>
+                <p class="chat__message-time">{{ item.creation_time }}</p>
+                <p class="chat__message-text">{{ item.comment }}</p>
                </div>
               </div>
               <p class="chat__your-message">Ваше сообщение</p>
@@ -3468,7 +3468,7 @@ Vue.component('chat', {
         if (typeof this.task === "undefined") {
             console.error("Не передан идентификатор задания (атрибут task) в теге 'chat'")
         } else {
-            this.api_url = '/view.php?r=api/messages&id=' + this.task;
+            this.api_url = '/api/messages/' + this.task;
             this.getMessages();
         }
     },

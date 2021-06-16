@@ -20,7 +20,7 @@ Carbon::setLocale('ru');
     <b class="new-task__price new-task__price--translation">
         <?= $model->budget ?><b> ₽</b>
     </b>
-    <p class="new-task__place"><?= $model->location->city ?></p>
+    <p class="new-task__place"><?= ($model->location_id == null) ? $model->location->city : ' не указан город испонения' ?></p>
     <span class="new-task__time"><?= Carbon::create(date('Y-m-d H:i:s', $model->created_at))->diffForHumans(); ?> </span>
 
 </div>

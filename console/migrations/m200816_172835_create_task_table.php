@@ -28,7 +28,7 @@ class m200816_172835_create_task_table extends Migration
             'name' => $this->string(128)->notNull(),
             'category_id' => $this->integer()->notNull(),
             'description' => $this->text(),
-            'location_id' => $this->integer()->notNull(),
+            'location_id' => $this->integer(),
             'budget' => $this->integer(),
             'deadline' => $this->dateTime()->notNull(),
             'customer_id' => $this->integer()->notNull(),

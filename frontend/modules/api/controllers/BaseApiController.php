@@ -31,6 +31,7 @@ class BaseApiController extends ActiveController
                     'xml' => Response::FORMAT_XML,
                     'application/json' => Response::FORMAT_JSON,
 
+
                 ],
             ],
         ];

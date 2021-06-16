@@ -60,7 +60,8 @@ return [
                 '<_controller:[\w\-]+>/<id:\d+>' => '<_controller>/view',
                 '<_controller:[\w\-]+>/<_action:[\w-]+>' => '<_controller>/<_action>',
                 '<_controller:[\w\-]+>/<id:\d+>/<_action:[\w-]+>' => '<_controller>/<_action>',
-                'api/<_controller:[\w\-]+>/<id:\d+>' => 'api/<_controller>/view',
+//                'api/<_controller:[\w\-]+>/<id:\d+>' => 'api/<_controller>/view',
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/messages', 'pluralize' => false]
 
             ],
         ],

@@ -19,7 +19,7 @@ class m200816_172611_create_locations_table extends Migration
         }
         $this->createTable('{{%locations}}', [
             'id' => $this->primaryKey(),
-            'city' => $this->string(128)->notNull()->unique(),
+            'city' => $this->string(128)->notNull(),
             'lat' => $this->string(128)->notNull(),
             'long' => $this->string(128)->notNull(),
         ], $tableOptions);

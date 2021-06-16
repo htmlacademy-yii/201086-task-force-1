@@ -2,8 +2,6 @@
 
 namespace frontend\modules\api;
 
-use Yii;
-
 /**
  * api module definition class
  */
@@ -19,11 +17,11 @@ class Module extends \yii\base\Module
      */
     public function init()
     {
-        if (Yii::$app->user->isGuest) {
+//        if (Yii::$app->user->isGuest &&  !(Yii::$app->request->isAjax ) ) {
 
-            throw new NotFoundHttpException('Отказ доступа');
-            return Yii::$app->response->setStatusCode(404);
-        }
+//            throw new NotFoundHttpException('Отказ доступа');
+//            return Yii::$app->response->setStatusCode(503);
+//        }
         parent::init();
 
         // custom initialization code goes here
