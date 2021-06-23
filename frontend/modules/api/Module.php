@@ -2,6 +2,8 @@
 
 namespace frontend\modules\api;
 
+use Yii;
+
 /**
  * api module definition class
  */
@@ -17,13 +19,14 @@ class Module extends \yii\base\Module
      */
     public function init()
     {
-//        if (Yii::$app->user->isGuest &&  !(Yii::$app->request->isAjax ) ) {
-
+//        if (Yii::$app->user->isGuest  ) {
+//
 //            throw new NotFoundHttpException('Отказ доступа');
 //            return Yii::$app->response->setStatusCode(503);
+//            //TODO реализовать правильное отображение ошибки
 //        }
         parent::init();
+        Yii::configure($this, require __DIR__ . '/config/main.php');
 
-        // custom initialization code goes here
     }
 }

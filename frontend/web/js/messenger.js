@@ -3454,13 +3454,13 @@ Vue.component('chat', {
     template: `<div><h3>Переписка</h3>
              <div class="chat__overflow">
                <div class="chat__message" v-for="item in messages" :class="{'chat__message--out': item.is_mine}">
-                <p class="chat__message-time">{{ item.creation_time }}</p>
-                <p class="chat__message-text">{{ item.comment }}</p>
+                <p class="chat__message-time">{{ item.published_at }}</p>
+                <p class="chat__message-text">{{ item.message }}</p>
                </div>
               </div>
               <p class="chat__your-message">Ваше сообщение</p>
               <form class="chat__form">
-                  <textarea class="input textarea textarea-chat" rows="2" name="message-text"
+                  <textarea class="input textarea textarea-chat" rows="2" name="message-text" 
                   v-model="message" placeholder="Текст сообщения">{{this.message}}</textarea>
                   <button class="button chat__button" v-on:click="sendMessage" type="button">Отправить</button>
               </form></div>`,
@@ -3474,7 +3474,7 @@ Vue.component('chat', {
     },
     methods: {
         sendMessage: function () {
-            fetch(this.api_url, {
+            fetch('/api/messages/create/' + this.task, {
                 method: 'POST',
                 body: JSON.stringify({message: this.message})
             })
