@@ -73,7 +73,7 @@ class MessagesController extends BaseApiController
     {
         $model = new Messages();
 
-        if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post(), '')) {
             $post = Yii::$app->request->post();
             $model['task_id'] = $id;
             $model->save();
