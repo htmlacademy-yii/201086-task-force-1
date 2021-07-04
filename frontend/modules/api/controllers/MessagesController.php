@@ -71,13 +71,22 @@ class MessagesController extends BaseApiController
 
     public function actionCreate($id)
     {
-        $model = new Messages();
+        $message = new Messages();
 
-        if ($model->load(Yii::$app->request->post())) {
+        if ($message->load(Yii::$app->request->post(), '')) {
             $post = Yii::$app->request->post();
-            $model['task_id'] = $id;
-            $model->save();
-            return $model;
+//            debug($post);
+//            $model['task_id'] = $id;
+
+            $message->writer_id = Yii::$app->user->getId();
+//            $message_body = json_decode(Yii::$app->getRequest()->getRawBody(), true);
+            $message->task_id = $id;
+            $message->comment = $post['message'];
+            $message->viewed = 0;
+            $message->creation_time = time();
+
+            $message->save(false);
+            return $message;
         }
 
     }

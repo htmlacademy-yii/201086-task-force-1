@@ -25,6 +25,7 @@ class Messages extends ChatMessages
                 return $data->creation_time;
             },
             'is_mine' => function ($data) {
+
                 return Yii::$app->user->id == $data->writer_id ? true : false;
             },
 

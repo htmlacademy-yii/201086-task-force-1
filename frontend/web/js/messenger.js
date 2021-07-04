@@ -3454,6 +3454,7 @@ Vue.component('chat', {
     template: `<div><h3>Переписка</h3>
              <div class="chat__overflow">
                <div class="chat__message" v-for="item in messages" :class="{'chat__message--out': item.is_mine}">
+                <p class="chat__message-author">{{ item.writer}}</p>
                 <p class="chat__message-time">{{ item.published_at }}</p>
                 <p class="chat__message-text">{{ item.message }}</p>
                </div>
@@ -3474,7 +3475,7 @@ Vue.component('chat', {
     },
     methods: {
         sendMessage: function () {
-            fetch('/api/messages/create/' + this.task, {
+            fetch('/api/messages/create?id=' + this.task, {
                 method: 'POST',
                 body: JSON.stringify({message: this.message})
             })

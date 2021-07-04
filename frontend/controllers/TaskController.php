@@ -159,6 +159,8 @@ class TaskController extends Controller
      */
     public function actionView($id)
     {
+
+//        debug(Yii::$app->request->scriptUrl);
         $model = Task::find()
             ->joinWith('location')
             ->where(['task.id' => $id])
