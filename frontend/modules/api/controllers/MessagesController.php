@@ -74,7 +74,7 @@ class MessagesController extends BaseApiController
         $model = new Messages();
         if ($model->load(Yii::$app->request->post(), '')) {
             $model['task_id'] = $id;
-            $model['writer_id'] = 1; //TODO корректный userId
+            $model['writer_id'] = Yii::$app->user->id; //TODO корректный userId
             $model['creation_time'] = time();
             $model['viewed'] = 0;
             $model->save();

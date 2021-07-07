@@ -22,7 +22,7 @@ class Messages extends ChatMessages
                 return $data->comment;
             },
             'published_at' => function ($data) {
-                return $data->creation_time;
+                return date('H:i d-m-Y', $data->creation_time);
             },
             'is_mine' => function ($data) {
 
