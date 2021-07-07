@@ -3477,7 +3477,10 @@ Vue.component('chat', {
         sendMessage: function () {
             fetch('/api/messages/create?id=' + this.task, {
                 method: 'POST',
-                body: JSON.stringify({message: this.message})
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({comment: this.message})
             })
                 .then(result => {
                     if (result.status !== 201) {
