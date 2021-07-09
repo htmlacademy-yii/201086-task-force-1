@@ -78,6 +78,8 @@ class MessagesController extends BaseApiController
             $model['creation_time'] = time();
             $model['viewed'] = 0;
             $model->save();
+
+            Yii::$app->getResponse()->setStatusCode(201);
             return $model;
         }
     }
