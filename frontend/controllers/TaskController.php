@@ -203,6 +203,28 @@ class TaskController extends Controller
         ]);
     }
 
+    public function actionMyList()
+    {
+        $user = User::find()->where(['id' => Yii::$app->user->id])->one();
+        if ($user->is_executor) {
+            $tasks = Task::find()
+                ->where(['executor_id' => $user->id])
+                ->all();
+        } else {
+            $tasks = Task::find()
+                ->where(['customer_id' => $user->id])
+                ->all();
+        }
+//        foreach ($tasks as $task) {
+//            debug($task->executor);
+//        }
+        return $this->render('my-list', [
+            'tasks' => $tasks,
+            'user' => $user
+
+        ]);
+    }
+
 
     /**
      * Finds the AvailableActions model based on its primary key value.

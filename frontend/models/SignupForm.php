@@ -14,6 +14,7 @@ class SignupForm extends Model
     public $email;
     public $password;
     public $location_id;
+    public $location;
 
 
     /**
@@ -27,16 +28,17 @@ class SignupForm extends Model
           ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
           ['username', 'string', 'min' => 2, 'max' => 255],
 
-          ['email', 'trim'],
-          ['email', 'required'],
-          ['email', 'email'],
-          ['email', 'string', 'max' => 255],
-          ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+            ['email', 'trim'],
+            ['email', 'required'],
+            ['email', 'email'],
+            ['email', 'string', 'max' => 255],
+            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
 
-          ['password', 'required'],
-          ['password', 'string', 'min' => 1],
+            ['password', 'required'],
+            ['password', 'string', 'min' => 1],
 
-          ['location_id', 'integer'],
+            ['location_id', 'integer'],
+            ['location', 'safe'],
         ];
     }
 

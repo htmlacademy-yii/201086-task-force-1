@@ -143,16 +143,17 @@ if (!Yii::$app->user->isGuest) {
             <div class="account__pop-up">
                 <ul class="account__pop-up-list">
                     <li>
-                        <a href="#">Мои задания</a>
+                        <?= Html::a('Мои задания', '/task/my-list') ?>
+                        <!--                        <a href="#">Мои задания</a>-->
                     </li>
                     <li>
                         <a href="#">Настройки</a>
                     </li>
                     <li><?php
-                      echo Html::beginForm(['/site/logout'], 'post');
-                      echo Html::submitButton('Выход ', ['class' => 'logout']);
-                      echo Html::endForm();
-                      ?>
+                        echo Html::beginForm(['/site/logout'], 'post');
+                        echo Html::submitButton('Выход ', ['class' => 'logout']);
+                        echo Html::endForm();
+                        ?>
                     </li>
                 </ul>
             </div>

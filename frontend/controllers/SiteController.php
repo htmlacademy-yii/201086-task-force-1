@@ -8,6 +8,7 @@ use frontend\models\ResendVerificationEmailForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\VerifyEmailForm;
+use frontend\services\LocationService;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\filters\AccessControl;
@@ -156,14 +157,21 @@ class SiteController extends Controller
     {
         $this->layout = 'main';
         $model = new SignupForm();
+        if (Yii::$app->request->post()) {
+            $post = Yii::$app->request->post();
+            $post['SignupForm']['location_id'] = LocationService::create($post['SignupForm']['location']);
+            unset($post['SignupForm']['location']);
 
-        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
+        }
+
+
+        if ($model->load($post) && $model->signup()) {
             Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
             return $this->goHome();
         }
 
         return $this->render('signup', [
-          'model' => $model,
+            'model' => $model,
         ]);
     }
 

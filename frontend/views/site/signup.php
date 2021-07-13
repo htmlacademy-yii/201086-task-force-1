@@ -6,10 +6,8 @@
 /* @var $model SignupForm */
 
 
-use frontend\models\Locations;
 use frontend\models\SignupForm;
 use yii\bootstrap\ActiveForm;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
 $this->title = 'Регистрация аккаунта';
@@ -27,34 +25,33 @@ $this->params['breadcrumbs'][] = $this->title;
               'placeholder' => 'kumarm@mail.ru',
               'rows' => 1,
               'style' => 'width: 100%',])
-            ->hint('Введите валидный адрес электронной почты')
-            ->label('Электронная почта'); ?>
-          <?= $form->field($model, 'username')
-            ->textarea([
-              'class' => 'input textarea',
-              'placeholder' => 'Мамедов Кумар',
-              'rows' => 1,
-              'style' => 'width: 100%',])
-            ->hint('Введите ваше имя и фамилию')
-            ->label('Ваше имя'); ?>
-          <?= $form->field($model, 'location_id')
-            ->dropDownList(ArrayHelper::map( Locations::find()->all(), 'id', 'city'),[
-              'class' => 'multiple-select input town-select registration-town',
-              'rows' => 1,
-              'prompt'=> 'Укажите город',
-              'style' => 'width: 100%',])
-            ->hint('Укажите город, чтобы находить подходящие задачи')
-            ->label('Город проживания'); ?>
-          <?= $form->field($model, 'password')->passwordInput([
-            'class' => 'input textarea',
-            'rows' => 1,
-            'style' => 'width: 100%',
-            'labelOptions'=>[
-              'class' => 'input-danger'
-            ]
-          ])
-            ->hint('Длина пароля от 8 символов')
-            ->label('Пароль'); ?>
+              ->hint('Введите валидный адрес электронной почты')
+              ->label('Электронная почта'); ?>
+            <?= $form->field($model, 'username')
+                ->textarea([
+                    'class' => 'input textarea',
+                    'placeholder' => 'Мамедов Кумар',
+                    'rows' => 1,
+                    'style' => 'width: 100%',])
+                ->hint('Введите ваше имя и фамилию')
+                ->label('Ваше имя'); ?>
+
+            <?= $form->field($model, 'location', ['template' => "<p>{label}</p>{input}",])
+                ->input('locations', [
+                    'id' => 13,
+                    'class' => 'input-navigation input-middle input',
+                    'placeholder' => 'Укажите город, чтобы находить подходящие задачи',
+                ])->label('Город проживания'); ?>
+            <?= $form->field($model, 'password')->passwordInput([
+                'class' => 'input textarea',
+                'rows' => 1,
+                'style' => 'width: 100%',
+                'labelOptions' => [
+                    'class' => 'input-danger'
+                ]
+            ])
+                ->hint('Длина пароля от 8 символов')
+                ->label('Пароль'); ?>
 
             <div class="form-group">
               <?= Html::submitButton('Cоздать аккаунт', ['class' => 'button button__registration', 'name' => 'signup-button']) ?>
