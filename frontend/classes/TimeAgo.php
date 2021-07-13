@@ -13,7 +13,7 @@ class TimeAgo
     {
         $this->date = $date;
         if ($ts) {
-            $this->time = time() - $this->date;
+            $this->time = time() - strtotime($this->date);
         } else {
             $this->time = time() - strtotime($this->date);
         }

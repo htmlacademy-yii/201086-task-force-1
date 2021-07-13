@@ -116,12 +116,14 @@ AppAsset::register($this);
                 echo Html::a("<span>Регистрация</span>", ['/site/signup'], ['class' => 'header__account-registration']);
 
             } else {
+
                 echo Html::beginForm(['/site/logout'], 'post');
-                echo Html::submitButton('Выход ', [
-                  'class' => 'logout',
-                  'style' => '    color: #fff;
+              echo Html::a("Задания", ['/task/index'], ['class' => "button"]);
+              echo Html::submitButton('Выход ', [
+                'class' => 'logout',
+                'style' => '    color: #fff;
     text-transform: uppercase;'
-                ]);
+              ]);
                 echo Html::endForm();
             } ?>
 
@@ -129,25 +131,26 @@ AppAsset::register($this);
     </div>
   </header>
 
-  <main>
-    <div class="landing-container">
-      <div class="landing-top">
-        <h1>Работа для всех.<br>
-          Найди исполнителя на любую задачу.</h1>
-        <p>Сломался кран на кухне? Надо отправить документы? Нет времени самому гулять с собакой?
-          У нас вы быстро найдёте исполнителя для любой жизненной ситуации?<br>
-          Быстро, безопасно и с гарантией. Просто, как раз, два, три. </p>
-        <button class="button">Создать аккаунт</button>
-      </div>
+    <main>
+        <div class="landing-container">
+            <div class="landing-top">
+                <h1>Работа для всех.<br>
+                    Найди исполнителя на любую задачу.</h1>
+                <p>Сломался кран на кухне? Надо отправить документы? Нет времени самому гулять с собакой?
+                    У нас вы быстро найдёте исполнителя для любой жизненной ситуации?<br>
+                    Быстро, безопасно и с гарантией. Просто, как раз, два, три. </p>
+              <?php echo Html::a("Редактирывать аккаунт", ['/task/index'],
+                ['class' => "button", 'style' => 'font-size: 14px']); ?>
+            </div>
 
-      <div class="landing-center">
-        <div class="landing-instruction">
-          <div class="landing-instruction-step">
-            <div class="instruction-circle circle-request"></div>
-            <div class="instruction-description">
-              <h3>Публикация заявки</h3>
-              <p>Создайте новую заявку.</p>
-              <p>Опишите в ней все детали
+            <div class="landing-center">
+                <div class="landing-instruction">
+                    <div class="landing-instruction-step">
+                        <div class="instruction-circle circle-request"></div>
+                        <div class="instruction-description">
+                            <h3>Публикация заявки</h3>
+                            <p>Создайте новую заявку.</p>
+                            <p>Опишите в ней все детали
                 и  стоимость работы.</p>
             </div>
           </div>

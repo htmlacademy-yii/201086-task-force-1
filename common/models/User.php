@@ -2,17 +2,20 @@
 namespace common\models;
 
 use frontend\models\Categories;
-use frontend\models\ChatMessages;
 use frontend\models\EmailSetting;
 use frontend\models\Favorites;
 use frontend\models\File;
 use frontend\models\Locations;
+use frontend\models\Messages;
 use frontend\models\Proposal;
 use frontend\models\Review;
 use frontend\models\Task;
+use frontend\models\UsersCategories;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
@@ -25,6 +28,7 @@ use yii\web\IdentityInterface;
  * @property string $password_reset_token
  * @property string $verification_token
  * @property string $email
+ * @property string $scype
  * @property string $auth_key
  * @property integer $status
  * @property integer $created_at
@@ -36,6 +40,8 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
+    public $scype;
+    public $another_messenger;
 
 
     /**
@@ -52,7 +58,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+          TimestampBehavior::class,
         ];
     }
 
@@ -64,6 +70,8 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+            [['phone', 'scype', 'another_messenger'], 'string'],
+            ['phone', 'match', 'pattern' => '/^(8)[(](\d{3})[)](\d{3})[-](\d{2})[-](\d{2})/', 'message' => 'Телефона, должно быть в формате 8(XXX)XXX-XX-XX'],
         ];
     }
 
@@ -228,7 +236,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * Gets query for [[Location]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getLocation()
     {
@@ -238,8 +246,8 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * Gets query for [[UsersCategories]].
      *
-     * @return \yii\db\ActiveQuery
-     * @throws \yii\base\InvalidConfigException
+     * @return ActiveQuery
+     * @throws InvalidConfigException
      */
     public function getCategory()
     {
@@ -250,7 +258,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * Gets query for [[Favorites]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getFavorites()
     {
@@ -258,19 +266,19 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Gets query for [[ChatMessages]].
+     * Gets query for [[Messages]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getChatMessages()
     {
-      return $this->hasMany(ChatMessages::class, ['writer_id' => 'id']);
+        return $this->hasMany(Messages::class, ['writer_id' => 'id']);
     }
 
     /**
      * Gets query for [[EmailSettings]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getEmailSettings()
     {
@@ -280,7 +288,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * Gets query for [[Files]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getFiles()
     {
@@ -290,7 +298,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * Gets query for [[Proposals]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getProposals()
     {
@@ -300,7 +308,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * Gets query for [[CustomerReviews]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getCustomerReview()
     {
@@ -310,7 +318,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * Gets query for [[ExecutorReviews]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getExecutorReview()
     {
@@ -320,7 +328,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * Gets query for [[CustomerTasks]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getCustomerTask()
     {
@@ -330,7 +338,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * Gets query for [[ExecutorTasks]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getExecutorTask()
     {
@@ -339,14 +347,29 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function getAva()
     {
-      $urlFile = "../../frontend/web/img/ava/ava".$this->id;
+        $urlFile = "../../frontend/web/img/ava/ava" . $this->id;
 
-      if( is_file($urlFile.".jpg") ){
-        return "ava/ava".$this->id.".jpg";
-      } elseif (is_file($urlFile.".png")) {
-        return "ava/ava".$this->id.".png";
-      } else {
-        return 'new-user.png';
-      }
+        if (is_file($urlFile . ".jpg")) {
+            return "ava/ava" . $this->id . ".jpg";
+        } elseif (is_file($urlFile . ".png")) {
+            return "ava/ava" . $this->id . ".png";
+        } else {
+            return 'new-user.png';
+        }
+    }
+
+    public static function create($name, $email, $location_id, $password)
+    {
+      $user = new static();
+      $user->username = $name;
+      $user->email = $email;
+      $user->location_id = $location_id;
+      $user->setPassword($password);
+      $user->generateAuthKey();
+      $user->generateEmailVerificationToken();
+      $user->save();
+      UsersCategories::fill($user->id);
+
+      return $user;
     }
 }

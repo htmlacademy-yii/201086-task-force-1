@@ -16,12 +16,17 @@ class m200816_172918_create_file_table extends Migration
      */
     public function safeUp()
     {
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
+            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%file}}', [
             'id' => $this->primaryKey(),
             'path' => $this->string(128)->notNull(),
             'user_id' => $this->integer()->notNull(),
             'task_id' => $this->integer(),
-        ]);
+        ], $tableOptions);
 
         // creates index for column `user_id`
         $this->createIndex(

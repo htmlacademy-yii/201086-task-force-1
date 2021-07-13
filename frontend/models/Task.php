@@ -2,7 +2,6 @@
 
 namespace frontend\models;
 
-
 use common\models\User;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -54,51 +53,51 @@ class Task extends ActiveRecord
     public function rules()
     {
         return [
-          [['name', 'category_id', 'deadline', 'customer_id', 'created_at', 'updated_at'], 'required'],
-          [
+            [['name', 'category_id', 'deadline', 'customer_id', 'created_at', 'updated_at'], 'required'],
             [
-              'category_id',
-              'location_id',
-              'budget',
-              'customer_id',
-              'executor_id',
-              'created_at',
-              'updated_at',
-              'status'
+                [
+                    'category_id',
+                    'location_id',
+                    'budget',
+                    'customer_id',
+                    'executor_id',
+                    'created_at',
+                    'updated_at',
+                    'status'
+                ],
+                'integer'
             ],
-            'integer'
-          ],
-          [['description', 'locations'], 'string'],
-          [['deadline'], 'safe'],
-          [['name'], 'string', 'max' => 128],
-          [
-            ['category_id'],
-            'exist',
-            'skipOnError' => true,
-            'targetClass' => Categories::class,
-            'targetAttribute' => ['category_id' => 'id']
-          ],
-          [
-            ['customer_id'],
-            'exist',
-            'skipOnError' => true,
-            'targetClass' => User::class,
-            'targetAttribute' => ['customer_id' => 'id']
-          ],
-          [
-            ['executor_id'],
-            'exist',
-            'skipOnError' => true,
-            'targetClass' => User::class,
-            'targetAttribute' => ['executor_id' => 'id']
-          ],
-          [
-            ['location_id'],
-            'exist',
-            'skipOnError' => true,
-            'targetClass' => Locations::class,
-            'targetAttribute' => ['location_id' => 'id']
-          ],
+            [['description', 'locations'], 'string'],
+            [['deadline'], 'safe'],
+            [['name'], 'string', 'max' => 128],
+            [
+                ['category_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Categories::class,
+                'targetAttribute' => ['category_id' => 'id']
+            ],
+            [
+                ['customer_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => User::class,
+                'targetAttribute' => ['customer_id' => 'id']
+            ],
+            [
+                ['executor_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => User::class,
+                'targetAttribute' => ['executor_id' => 'id']
+            ],
+            [
+                ['location_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Locations::class,
+                'targetAttribute' => ['location_id' => 'id']
+            ],
         ];
     }
 
@@ -203,7 +202,7 @@ class Task extends ActiveRecord
         return $this->hasOne(Locations::class, ['id' => 'location_id']);
     }
 
-    public static function create($user, $array, $location_id)
+    public static function create($user, $array, $location_id = null)
     {
 
         $task = new static;

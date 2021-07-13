@@ -31,7 +31,7 @@ if (!Yii::$app->user->isGuest) {
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <?= Html::csrfMetaTags() ?>
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
 
@@ -92,7 +92,7 @@ if (!Yii::$app->user->isGuest) {
                   $menuItems[] = ['label' => 'Создать задание', 'url' => ['task/create']];
               }
 
-              $menuItems[] = ['label' => 'Мой профиль', 'url' => ['site/login']];
+              $menuItems[] = ['label' => 'Мой профиль', 'url' => ['account/' . Yii::$app->user->id]];
               echo Menu::widget([
                 'options' => ['class' => 'header-nav__list site-list'],
                 'activeCssClass' => 'site-list__item--active',
@@ -132,29 +132,28 @@ if (!Yii::$app->user->isGuest) {
             </div>
             <div class="header__account">
                 <a class="header__account-photo">
-                    <img src="<?php if(Yii::$app->controller->id == 'site')  {
-                      echo 'img/'.$user->ava;
-                    }else{ echo '/img/'.$user->ava;}?> ?>"
+                    <img src="<?= '/img/avatar/ava' . Yii::$app->user->id . '.jpg'; ?>"
                          width="43" height="44"
                          alt="Аватар пользователя">
                 </a>
                 <span class="header__account-name">
-                 <?=Yii::$app->user->identity->username?>
+                 <?= Yii::$app->user->identity->username ?>
              </span>
             </div>
             <div class="account__pop-up">
                 <ul class="account__pop-up-list">
                     <li>
-                        <a href="#">Мои задания</a>
+                        <?= Html::a('Мои задания', '/task/my-list') ?>
+                        <!--                        <a href="#">Мои задания</a>-->
                     </li>
                     <li>
                         <a href="#">Настройки</a>
                     </li>
                     <li><?php
-                      echo Html::beginForm(['/site/logout'], 'post');
-                      echo Html::submitButton('Выход ', ['class' => 'logout']);
-                      echo Html::endForm();
-                      ?>
+                        echo Html::beginForm(['/site/logout'], 'post');
+                        echo Html::submitButton('Выход ', ['class' => 'logout']);
+                        echo Html::endForm();
+                        ?>
                     </li>
                 </ul>
             </div>

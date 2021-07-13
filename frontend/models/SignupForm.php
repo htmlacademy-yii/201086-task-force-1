@@ -14,6 +14,7 @@ class SignupForm extends Model
     public $email;
     public $password;
     public $location_id;
+    public $location;
 
 
     /**
@@ -27,44 +28,36 @@ class SignupForm extends Model
           ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
           ['username', 'string', 'min' => 2, 'max' => 255],
 
-          ['email', 'trim'],
-          ['email', 'required'],
-          ['email', 'email'],
-          ['email', 'string', 'max' => 255],
-          ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+            ['email', 'trim'],
+            ['email', 'required'],
+            ['email', 'email'],
+            ['email', 'string', 'max' => 255],
+            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
 
-          ['password', 'required'],
-          ['password', 'string', 'min' => 1],
+            ['password', 'required'],
+            ['password', 'string', 'min' => 1],
 
-          ['location_id', 'integer'],
+            ['location_id', 'integer'],
+            ['location', 'safe'],
         ];
     }
 
     /**
      * Signs user up.
      *
-     * @return bool whether the creating new account was successful and email was sent
+     * @return bool whether the creating new account1 was successful and email was sent
      */
     public function signup()
     {
         if (!$this->validate()) {
             return null;
         }
-        $user = new User();
-        $user->username = $this->username;
-        $user->email = $this->email;
-        $user->location_id = $this->location_id;
-        $user->setPassword($this->password);
-        $user->generateAuthKey();
-        $user->generateEmailVerificationToken();
 
-        $user->save(false);
-
+        $user = User::create($this->username, $this->email, $this->location_id, $this->password);
         $auth = Yii::$app->authManager;
         $authorRole = $auth->getRole('customer');
         $auth->assign($authorRole, $user->getId());
-
-        return $user->save() && $this->sendEmail($user);
+        return $this->sendEmail($user);
 
     }
 

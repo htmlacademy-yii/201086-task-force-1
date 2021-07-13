@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use common\models\User;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -12,7 +13,7 @@ use yii\db\ActiveRecord;
  * @property int $task_id
  * @property int $writer_id
  * @property string|null $comment
- * @property string $creation_time
+ * @property int $creation_time
  * @property int $viewed
  *
  * @property Task $task
@@ -34,12 +35,23 @@ class ChatMessages extends ActiveRecord
     public function rules()
     {
         return [
-            [['task_id', 'writer_id', 'viewed'], 'required'],
-            [['task_id', 'writer_id', 'viewed'], 'integer'],
-            [['comment'], 'string'],
-            [['creation_time'], 'safe'],
-            [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::className(), 'targetAttribute' => ['task_id' => 'id']],
-            [['writer_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['writer_id' => 'id']],
+          [['task_id', 'writer_id', 'creation_time', 'viewed'], 'required'],
+          [['task_id', 'writer_id', 'creation_time', 'viewed'], 'integer'],
+          [['comment'], 'string'],
+          [
+            ['task_id'],
+            'exist',
+            'skipOnError' => true,
+            'targetClass' => Task::class,
+            'targetAttribute' => ['task_id' => 'id']
+          ],
+          [
+            ['writer_id'],
+            'exist',
+            'skipOnError' => true,
+            'targetClass' => User::class,
+            'targetAttribute' => ['writer_id' => 'id']
+          ],
         ];
     }
 
@@ -50,7 +62,7 @@ class ChatMessages extends ActiveRecord
     {
         return [
           'id' => 'ID',
-          'task_id' => 'AvailableActions ID',
+          'task_id' => 'Task ID',
           'writer_id' => 'Writer ID',
           'comment' => 'Comment',
           'creation_time' => 'Creation Time',
@@ -59,13 +71,13 @@ class ChatMessages extends ActiveRecord
     }
 
     /**
-     * Gets query for [[AvailableActions]].
+     * Gets query for [[Task]].
      *
      * @return ActiveQuery
      */
     public function getTask()
     {
-        return $this->hasOne(Task::className(), ['id' => 'task_id']);
+        return $this->hasOne(Task::class, ['id' => 'task_id']);
     }
 
     /**
@@ -75,6 +87,19 @@ class ChatMessages extends ActiveRecord
      */
     public function getWriter()
     {
-        return $this->hasOne(User::className(), ['id' => 'writer_id']);
+        return $this->hasOne(User::class, ['id' => 'writer_id']);
+    }
+
+    public static function create($task_id, $writer_id, $comment)
+    {
+        $message = new static();
+
+        $message->task_id = $task_id;
+        $message->writer_id = $writer_id;
+        $message->comment = $comment;
+        $message->creation_time = 1;
+        $message->viewed = 0;
+        $message->save();
+        return $message;
     }
 }

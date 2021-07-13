@@ -18,20 +18,25 @@ class m200816_172835_create_task_table extends Migration
      */
     public function safeUp()
     {
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
+            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%task}}', [
-          'id' => $this->primaryKey(),
-          'name' => $this->string(128)->notNull(),
-          'category_id' => $this->integer()->notNull(),
-          'description' => $this->text(),
-          'location_id' => $this->integer()->notNull(),
-          'budget' => $this->integer(),
-          'deadline' => $this->dateTime()->notNull(),
-          'customer_id' => $this->integer()->notNull(),
-          'executor_id' => $this->integer(),
-          'status' => $this->integer(),
-          'created_at' => $this->integer()->notNull(),
-          'updated_at' => $this->integer()->notNull(),
-        ]);
+            'id' => $this->primaryKey(),
+            'name' => $this->string(128)->notNull(),
+            'category_id' => $this->integer()->notNull(),
+            'description' => $this->text(),
+            'location_id' => $this->integer(),
+            'budget' => $this->integer(),
+            'deadline' => $this->dateTime()->notNull(),
+            'customer_id' => $this->integer()->notNull(),
+            'executor_id' => $this->integer(),
+            'status' => $this->integer(),
+            'created_at' => $this->integer()->notNull(),
+            'updated_at' => $this->integer()->notNull(),
+        ], $tableOptions);
 
         // creates index for column `category_id`
         $this->createIndex(

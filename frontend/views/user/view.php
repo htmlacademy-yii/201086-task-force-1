@@ -4,7 +4,8 @@ use common\models\User;
 use frontend\classes\TimeAgo;
 use frontend\models\Task;
 use yii\helpers\Html;
-use \yii\web\YiiAsset;
+use yii\web\YiiAsset;
+
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
 

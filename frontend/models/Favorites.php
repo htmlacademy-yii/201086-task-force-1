@@ -2,7 +2,8 @@
 
 namespace frontend\models;
 
-use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "favorites".
@@ -14,7 +15,7 @@ use Yii;
  * @property User $favorites
  * @property User $user
  */
-class Favorites extends \yii\db\ActiveRecord
+class Favorites extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -52,7 +53,7 @@ class Favorites extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Favorites]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getFavorites()
     {
@@ -62,7 +63,7 @@ class Favorites extends \yii\db\ActiveRecord
     /**
      * Gets query for [[User]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getUser()
     {

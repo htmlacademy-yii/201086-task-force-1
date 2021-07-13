@@ -7,13 +7,18 @@ $params = array_merge(
 );
 
 return [
-    'id' => 'app-frontend',
-    'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
-    'layout' => 'layout',
-    'modules' => [
-      'gii'
-    ],
+  'id' => 'app-frontend',
+  'basePath' => dirname(__DIR__),
+  'bootstrap' => [
+    'log',
+  ],
+  'layout' => 'layout',
+  'modules' => [
+//      'gii',
+      'api' => [
+          'class' => 'frontend\modules\api\Module',
+      ],
+  ],
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
         'request' => [
@@ -46,18 +51,20 @@ return [
 
         'urlManager' => [
             'enablePrettyUrl' => true,
+            'enableStrictParsing' => false,
             'showScriptName' => false,
             'rules' => [
-              ''=>'site/index',
-              '<_a:login|logout>'=>'site/<_a>',
-              '<_c:[\w\-]+>' => '<_c>/index',
-              '<_c:[\w\-]+>/<id:\d+>' => '<_c>/view',
-              '<_c:[\w\-]+>/<_a:[\w-]+>' => '<_c>/<_a>',
-              '<_c:[\w\-]+>/<id:\d+>/<_a:[\w-]+>' => '<_c>/<_a>',
+                '/' => 'site/index',
+                '<_action:login|logout>' => 'site/<_action>',
+                '<_controller:[\w\-]+>' => '<_controller>/index',
+                '<_controller:[\w\-]+>/<id:\d+>' => '<_controller>/view',
+                '<_controller:[\w\-]+>/<_action:[\w-]+>' => '<_controller>/<_action>',
+                '<_controller:[\w\-]+>/<id:\d+>/<_action:[\w-]+>' => '<_controller>/<_action>',
+//                'api/<_controller:[\w\-]+>/<id:\d+>' => 'api/<_controller>/view',
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/messages', 'pluralize' => false]
 
             ],
         ],
-
     ],
     'params' => $params,
 ];

@@ -6,75 +6,80 @@ use common\models\User;
 use frontend\models\File;
 use frontend\models\forms\UploadForm;
 use frontend\models\Proposal;
-use frontend\models\Review;
+use frontend\models\search\TaskSearch;
 use frontend\models\Task;
 use frontend\models\TaskCreate;
-use frontend\models\TaskSearch;
 use frontend\services\LocationService;
 use Yii;
-use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 
 /**
- * TaskController implements the CRUD actions for AvailableActions model.
+ * TaskController implements the CRUD actions for Task model.
  */
 class TaskController extends Controller
 {
     public $layout = 'main';
-
     /**
      * {@inheritdoc}
      */
     public function behaviors()
     {
         return [
-          'verbs' => [
-            'class' => VerbFilter::className(),
-            'actions' => [
-              'delete' => ['POST'],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
             ],
-          ],
-          'access' => [
-            'class' => AccessControl::className(),
-            'rules' => [
-              [
-                'allow' => true,
-                'actions' => ['index', 'view', 'proposal', 'refus'],
-                'roles' => ['@'],
-              ],
-              [
-                'allow' => true,
-                'actions' => ['create'],
-                'roles' => ['createTask'],
-              ],
-              [
-                'allow' => true,
-                'actions' => ['denied', 'respond', 'cancel', 'completion'],
-                'roles' => ['createTask'],
-              ],
-
-
-            ],
-          ],
         ];
     }
 
     /**
-     * Lists all AvailableActions models.
+     * Lists all Task models.
      * @return mixed
      */
     public function actionIndex()
     {
+//        debug( Yii::$app->request->get());
         $searchModel = new TaskSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-          'searchModel' => $searchModel,
-          'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
+    }
+
+
+
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Deletes an existing AvailableActions model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDelete($id)
+    {
+        $this->findModel($id)->delete();
+
+        return $this->redirect(['index']);
     }
 
     public function actionCompletion()
@@ -94,7 +99,7 @@ class TaskController extends Controller
             $assessment = $get['Task']['assessment'];
         }
         Review::create($task->customer_id, $task->executor_id, $get['task'], $get['Task']['completion_comment'],
-          $assessment);
+            $assessment);
 
         $this->redirect(Yii::$app->request->referrer);
     }
@@ -154,21 +159,24 @@ class TaskController extends Controller
      */
     public function actionView($id)
     {
+
+//        debug(Yii::$app->request->scriptUrl);
         $model = Task::find()
-          ->joinWith('location')
-          ->where(['task.id' => $id])
-          ->one();
+            ->joinWith('location')
+            ->where(['task.id' => $id])
+            ->one();
         $user = User::find()->where(['id' => $model->customer_id])->one();
         $proposal = Proposal::find()
-          ->joinWith('user')
-          ->joinWith('task')
-          ->all();
+            ->joinWith('user')
+            ->joinWith('task')
+            ->all();
         return $this->render('view', [
-          'model' => $model,
-          'proposal' => $proposal,
-          'user' => $user
+            'model' => $model,
+            'proposal' => $proposal,
+            'user' => $user
         ]);
     }
+
     public function actionCreate()
     {
         $task = new TaskCreate();
@@ -177,46 +185,46 @@ class TaskController extends Controller
 
         if ($task->load(Yii::$app->request->post())) {
             $post = Yii::$app->request->post();
-            Task::create(Yii::$app->user->id, $post, LocationService::create($post['TaskCreate']['location']));
+            if ($post['TaskCreate']['location'] == '') {
+                Task::create(Yii::$app->user->id, $post, LocationService::create($post['TaskCreate']['location']));
+            } else {
+                Task::create(Yii::$app->user->id, $post, LocationService::create($post['TaskCreate']['location']));
+            }
             $fileModel->file = UploadedFile::getInstance($fileModel, 'file');
-            if((!empty($fileModel->file))&&($fileModel->upload())){
-                $file::create(Yii::$app->user->id, count(Task::find()->all()),"/img/upload/".$fileModel->file->name)->save();
+            if ((!empty($fileModel->file)) && ($fileModel->upload())) {
+                $file::create(Yii::$app->user->id, count(Task::find()->all()), "/img/upload/" . $fileModel->file->name)->save();
             }
             return $this->redirect('index');
         }
 
         return $this->render('create', [
-          'task' => $task,
-          'fileModel' => $fileModel,
+            'task' => $task,
+            'fileModel' => $fileModel,
         ]);
     }
 
-    public function actionUpdate($id)
+    public function actionMyList()
     {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $user = User::find()->where(['id' => Yii::$app->user->id])->one();
+        if ($user->is_executor) {
+            $tasks = Task::find()
+                ->where(['executor_id' => $user->id])
+                ->all();
+        } else {
+            $tasks = Task::find()
+                ->where(['customer_id' => $user->id])
+                ->all();
         }
+//        foreach ($tasks as $task) {
+//            debug($task->executor);
+//        }
+        return $this->render('my-list', [
+            'tasks' => $tasks,
+            'user' => $user
 
-        return $this->render('update', [
-          'model' => $model,
         ]);
     }
 
-    /**
-     * Deletes an existing AvailableActions model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
 
     /**
      * Finds the AvailableActions model based on its primary key value.

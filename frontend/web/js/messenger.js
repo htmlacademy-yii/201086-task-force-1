@@ -3454,13 +3454,14 @@ Vue.component('chat', {
     template: `<div><h3>Переписка</h3>
              <div class="chat__overflow">
                <div class="chat__message" v-for="item in messages" :class="{'chat__message--out': item.is_mine}">
+                <p class="chat__message-author">{{ item.writer}}</p>
                 <p class="chat__message-time">{{ item.published_at }}</p>
                 <p class="chat__message-text">{{ item.message }}</p>
                </div>
               </div>
               <p class="chat__your-message">Ваше сообщение</p>
               <form class="chat__form">
-                  <textarea class="input textarea textarea-chat" rows="2" name="message-text"
+                  <textarea class="input textarea textarea-chat" rows="2" name="message-text" 
                   v-model="message" placeholder="Текст сообщения">{{this.message}}</textarea>
                   <button class="button chat__button" v-on:click="sendMessage" type="button">Отправить</button>
               </form></div>`,
@@ -3468,15 +3469,18 @@ Vue.component('chat', {
         if (typeof this.task === "undefined") {
             console.error("Не передан идентификатор задания (атрибут task) в теге 'chat'")
         } else {
-            this.api_url = '/index.php/api/messages?id=' + this.task;
+            this.api_url = '/api/messages/' + this.task;
             this.getMessages();
         }
     },
     methods: {
         sendMessage: function () {
-            fetch(this.api_url, {
+            fetch('/api/messages/create?id=' + this.task, {
                 method: 'POST',
-                body: JSON.stringify({message: this.message})
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({comment: this.message})
             })
                 .then(result => {
                     if (result.status !== 201) {

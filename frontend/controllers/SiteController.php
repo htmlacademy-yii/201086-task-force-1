@@ -8,9 +8,11 @@ use frontend\models\ResendVerificationEmailForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\VerifyEmailForm;
+use frontend\services\LocationService;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 
@@ -25,22 +27,28 @@ class SiteController extends Controller
     public function behaviors()
     {
         return [
-          'access' => [
-            'class' => AccessControl::className(),
-            'only' => ['logout', 'signup'],
-            'rules' => [
-              [
-                'actions' => ['signup'],
-                'allow' => true,
-                'roles' => ['?'],
-              ],
-              [
-                'actions' => ['logout'],
-                'allow' => true,
-                'roles' => ['@'],
-              ],
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['logout', 'signup'],
+                'rules' => [
+                    [
+                        'actions' => ['signup'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'actions' => ['logout'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
             ],
-          ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'logout' => ['post'],
+                ],
+            ],
         ];
     }
 
@@ -67,7 +75,8 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+
+      return $this->render('index');
     }
 
     /**
@@ -77,7 +86,8 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
+
+      if (!Yii::$app->user->isGuest) {
             return $this->redirect('task/index');
         }
 
@@ -147,14 +157,21 @@ class SiteController extends Controller
     {
         $this->layout = 'main';
         $model = new SignupForm();
+        if (Yii::$app->request->post()) {
+            $post = Yii::$app->request->post();
+            $post['SignupForm']['location_id'] = LocationService::create($post['SignupForm']['location']);
+            unset($post['SignupForm']['location']);
 
-        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
+        }
+
+
+        if ($model->load($post) && $model->signup()) {
             Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
             return $this->goHome();
         }
 
         return $this->render('signup', [
-          'model' => $model,
+            'model' => $model,
         ]);
     }
 
@@ -228,7 +245,7 @@ class SiteController extends Controller
             }
         }
 
-        Yii::$app->session->setFlash('error', 'Sorry, we are unable to verify your account with provided token.');
+        Yii::$app->session->setFlash('error', 'Sorry, we are unable to verify your account1 with provided token.');
         return $this->goHome();
     }
 
