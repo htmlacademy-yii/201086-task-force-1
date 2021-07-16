@@ -7,7 +7,7 @@ use frontend\models\Account;
 use frontend\models\Categories;
 use frontend\models\forms\UploadAvatarForm;
 use frontend\models\UsersCategories;
-use frontend\models\UserSearch;
+use frontend\services\LocationService;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -36,20 +36,7 @@ class AccountController extends Controller
         ];
     }
 
-    /**
-     * Lists all User models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $searchModel = new UserSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
 
     /**
      * Displays a single User model.
@@ -59,6 +46,8 @@ class AccountController extends Controller
      */
     public function actionView($id)
     {
+
+
         $model = User::find()->where(['id' => $id])->one();
         $categories = Categories::find()->asArray()->all();
         $userCategories = UsersCategories::find()->where(['user_id' => $id])
@@ -67,6 +56,8 @@ class AccountController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             $post = Yii::$app->request->post();
+
+
             foreach ($post['Account'] as $k => $v) {
                 foreach ($userCategories as $cat) {
                     if ($k == $cat->category->title_en) {
@@ -83,6 +74,8 @@ class AccountController extends Controller
                 }
             }
             $model->email = $post['User']['email'];
+            $model->location_id = LocationService::create($post['location']);
+            unset($post['location']);
             $model->info = $post['User']['info'];
             $model->phone = $post['User']['phone'];
             $model->scype = $post['User']['scype'];

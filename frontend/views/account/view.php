@@ -53,7 +53,8 @@ YiiAsset::register($this);
                     </div>
                     <div class="account__input account__input--address">
                         <label for="202">Адрес</label>
-                        <input class="input textarea" id="202" name="" placeholder="Санкт-Петербург, Московский район">
+                        <input class="input textarea" type="text" id="202" name="location"
+                               placeholder="Санкт-Петербург, Московский район">
                     </div>
                     <div class="account__input account__input--date">
                         <?= DatePicker::widget([
