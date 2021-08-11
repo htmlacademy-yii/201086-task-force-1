@@ -73,7 +73,6 @@ if (!Yii::$app->user->isGuest) {
                 </a>
             </div>
             <div class="header__nav">
-
               <?php
               if (Yii::$app->user->isGuest) {
                 $menuItems[] = ['label' => 'Задания', 'url' => ['/task/index']];
