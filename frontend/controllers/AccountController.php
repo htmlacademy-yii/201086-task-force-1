@@ -10,6 +10,7 @@ use frontend\models\UsersCategories;
 use frontend\services\LocationService;
 use Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
@@ -100,7 +101,6 @@ class AccountController extends Controller
     public function actionCreate()
     {
         $model = new User();
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }

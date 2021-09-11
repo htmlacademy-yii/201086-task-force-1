@@ -2,21 +2,25 @@
 
 namespace frontend\controllers;
 
-use common\models\User;
-use frontend\models\UserSearch;
+
+use frontend\models\forms\UploadWorkForm;
 use Yii;
-use yii\filters\VerbFilter;
+use frontend\models\WorkPhoto;
+use frontend\models\search\WorkPhotoSearch;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
- * UserController implements the CRUD actions for User model.
+ * WorkPhotoController implements the CRUD actions for WorkPhoto model.
  */
-class UserController extends Controller
+class WorkPhotoController extends Controller
 {
-    public $layout = 'main';
 
+
+    public $layout = 'main';
     /**
      * {@inheritdoc}
      */
@@ -33,12 +37,13 @@ class UserController extends Controller
     }
 
     /**
-     * Lists all User models.
+     * Lists all WorkPhoto models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new UserSearch();
+
+        $searchModel = new WorkPhotoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -48,41 +53,50 @@ class UserController extends Controller
     }
 
     /**
-     * Displays a single User model.
+     * Displays a single WorkPhoto model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        $model = User::find()->where(['id'=> $id])
-            ->with('photoWork')
-            ->one();
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new User model.
+     * Creates a new WorkPhoto model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new User();
+        $model = new WorkPhoto();
+        $file = new UploadWorkForm();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) ) {
+            $file->file = UploadedFile::getInstance($file, 'file');
+//
+            if (!$file->upload()) {
+                // file is uploaded successfully
+
+                return;
+            }
+           $model->url = $file->path;
+
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
             'model' => $model,
+            'file'=> $file
         ]);
     }
 
     /**
-     * Updates an existing User model.
+     * Updates an existing WorkPhoto model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -102,7 +116,7 @@ class UserController extends Controller
     }
 
     /**
-     * Deletes an existing User model.
+     * Deletes an existing WorkPhoto model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -116,15 +130,15 @@ class UserController extends Controller
     }
 
     /**
-     * Finds the User model based on its primary key value.
+     * Finds the WorkPhoto model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return User the loaded model
+     * @return WorkPhoto the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = User::findOne($id)) !== null) {
+        if (($model = WorkPhoto::findOne($id)) !== null) {
             return $model;
         }
 

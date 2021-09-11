@@ -53,7 +53,7 @@ YiiAsset::register($this);
                     </div>
                     <div class="account__input account__input--address">
                         <label for="202">Адрес</label>
-                        <input class="input textarea" type="text" id="202" name="location"
+                        <input class="input textarea" type="text" id="202" name="location" value="<?= $model->location->city?>"
                                placeholder="Санкт-Петербург, Московский район">
                     </div>
                     <div class="account__input account__input--date">
@@ -77,6 +77,10 @@ YiiAsset::register($this);
                         ])->label('Информация о себе'); ?>
                     </div>
                 </div>
+            </div>
+            <div class="photos-block">
+                <?= Html::a("Фото работ", ['/work-photo'],
+                    ['class' => "btn btn-primary"]); ?>
             </div>
             <h3 class="div-line">Выберите свои специализации</h3>
             <div class="account__redaction-section-wrapper">

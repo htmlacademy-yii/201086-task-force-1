@@ -64,8 +64,11 @@ $users = User::find()->indexBy('id')->all();
                 </div>
                 <div class="user__card-photo">
                     <h3 class="content-view__h3">Фото работ</h3>
-                  <?php foreach ($model->files as $file):?>
-                      <a href="#"><img src=".<?= $file['path']?>" width="85" height="86" alt="Фото работы"></a>
+                  <?php foreach ($model->photoWork as $work):?>
+                      <a href="#">
+                          <img src="/<?= $work['url']?>" width="85" height="86" alt="Фото работы">
+                          <span><?= $work['title']?></span>
+                      </a>
                   <?php endforeach;?>
                 </div>
             </div>
