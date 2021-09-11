@@ -11,6 +11,7 @@ use frontend\models\Proposal;
 use frontend\models\Review;
 use frontend\models\Task;
 use frontend\models\UsersCategories;
+use frontend\models\WorkPhoto;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\NotSupportedException;
@@ -61,6 +62,7 @@ class User extends ActiveRecord implements IdentityInterface
           TimestampBehavior::class,
         ];
     }
+
 
     /**
      * {@inheritdoc}
@@ -356,6 +358,11 @@ class User extends ActiveRecord implements IdentityInterface
         } else {
             return 'new-user.png';
         }
+    }
+
+    public function getPhotoWork()
+    {
+        return $this->hasMany(WorkPhoto::class, ['user_id' => 'id']);
     }
 
     public static function create($name, $email, $location_id, $password)

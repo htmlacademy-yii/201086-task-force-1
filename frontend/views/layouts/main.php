@@ -8,6 +8,7 @@
 use common\models\User;
 use frontend\assets\AppAsset;
 use frontend\models\Locations;
+use frontend\services\AccountService;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
@@ -72,7 +73,6 @@ if (!Yii::$app->user->isGuest) {
                 </a>
             </div>
             <div class="header__nav">
-
               <?php
               if (Yii::$app->user->isGuest) {
                 $menuItems[] = ['label' => 'Задания', 'url' => ['/task/index']];
@@ -116,10 +116,17 @@ if (!Yii::$app->user->isGuest) {
             <div class="header__lightbulb"></div>
             <div class="lightbulb__pop-up">
                 <h3>Новые события</h3>
-                <p class="lightbulb__new-task lightbulb__new-task--message">
-                    Новое сообщение в чате
-                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                </p>
+                <?php if (count(AccountService::notificationChat())) { ?>
+                    <?php foreach (AccountService::notificationChat() as $unreadMsg) { ?>
+                        <p class="lightbulb__new-task lightbulb__new-task--message">
+                            Новое сообщение в чате
+                            <a href="<?= Url::to('task', ['id' => $unreadMsg['task_id']]); ?>"
+                               class="link-regular">«<?= $unreadMsg['task_name'] ?>»</a>
+                        </p>
+
+                    <?php } ?>
+                <?php } ?>
+                <!--                TODO: Закончить вывод сообщений -->
                 <p class="lightbulb__new-task lightbulb__new-task--executor">
                     Выбран исполнитель для
                     <a href="#" class="link-regular">«Помочь с курсовой»</a>
